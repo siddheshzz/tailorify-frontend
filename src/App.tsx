@@ -59,10 +59,10 @@ function App() {
 
       <Routes>
         {/* Public Routes */}
-        <Route
+        {/* <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
-        />
+        /> */}
         <Route
           path="/register"
           element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
@@ -72,9 +72,9 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Home />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         />
         <Route
@@ -122,9 +122,9 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requireAdmin>
+            // <ProtectedRoute requireAdmin>
               <Dashboard />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         />
         <Route
@@ -160,8 +160,8 @@ function App() {
           }
         />
 
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Catch all
+        <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </BrowserRouter>
   );
