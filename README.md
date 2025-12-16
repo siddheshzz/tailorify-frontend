@@ -251,3 +251,7 @@ code {
     box-shadow 0.2s ease,
     transform 0.2s ease;
 }
+
+
+
+From what i see is we need to tweartk frontend a lot to accomodate this backend

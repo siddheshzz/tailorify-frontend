@@ -17,7 +17,12 @@ export const Profile: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     full_name: "",
-    email: "",
+    first_name:"",
+    last_name:"",
+    phone:"",
+    address:"",
+    password:"",
+    email:""
   });
   useEffect(() => {
     loadProfile();
@@ -27,8 +32,13 @@ export const Profile: React.FC = () => {
       const data = await userService.getMe();
       setUser(data);
       setFormData({
-        full_name: data.full_name,
-        email: data.email,
+        first_name: data.first_name,
+        last_name:data.last_name,
+        phone:data.phone,
+        address:data.address,
+        password:data.password,
+        email:data.email,
+        full_name: data.first_name + " "+ data.last_name
       });
     } catch (error) {
       toast.error("Failed to load profile");
@@ -43,8 +53,11 @@ export const Profile: React.FC = () => {
     setSubmitting(true);
     try {
       const updated = await userService.updateMe(user.id, {
-        full_name: formData.full_name,
-        email: formData.email,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        phone:formData.phone,
+        address:formData.address,
+        password:formData.password,
       });
       setUser(updated);
       setEditing(false);
@@ -84,7 +97,7 @@ export const Profile: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">
-                    {user.full_name}
+                    {user.first_name}
                   </h2>
                   <p className="text-gray-600">{user.email}</p>
                 </div>
@@ -95,7 +108,7 @@ export const Profile: React.FC = () => {
                   <label className="text-sm font-medium text-gray-700">
                     Full Name
                   </label>
-                  <p className="text-gray-900 mt-1">{user.full_name}</p>
+                  <p className="text-gray-900 mt-1">{user.first_name} {user.last_name}</p>
                 </div>
 
                 <div>
@@ -107,9 +120,26 @@ export const Profile: React.FC = () => {
 
                 <div>
                   <label className="text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
+                  <p className="text-gray-900 mt-1">{user.phone}</p>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Address
+                  </label>
+                  <p className="text-gray-900 mt-1">{user.address} {user.last_name}</p>
+                </div>
+
+
+
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
                     Role
                   </label>
-                  <p className="text-gray-900 mt-1 capitalize">{user.role}</p>
+                  <p className="text-gray-900 mt-1 capitalize">{user.user_type}</p>
                 </div>
               </div>
 
@@ -120,23 +150,41 @@ export const Profile: React.FC = () => {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
-                label="Full Name"
-                value={formData.full_name}
+                label="First Name"
+                value={formData.first_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, full_name: e.target.value })
+                  setFormData({ ...formData, first_name: e.target.value })
                 }
                 required
               />
 
-              <Input
-                label="Email"
-                type="email"
-                value={formData.email}
+               <Input
+                label="Last Name"
+                value={formData.last_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
+                  setFormData({ ...formData, last_name: e.target.value })
                 }
                 required
               />
+
+               <Input
+                label="Phone"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                required
+              />
+
+               <Input
+                label="Address"
+                value={formData.address}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
+                required
+              />
+               
 
               <div className="flex gap-3 pt-4">
                 <Button
@@ -145,8 +193,14 @@ export const Profile: React.FC = () => {
                   onClick={() => {
                     setEditing(false);
                     setFormData({
-                      full_name: user.full_name,
-                      email: user.email,
+                      first_name: user.first_name,
+                      last_name: user.last_name,
+                      phone: user.phone,
+                      address:user.address,
+                      password:user.password,
+                      full_name:"",
+                      email:user.email
+
                     });
                   }}
                   className="flex-1"

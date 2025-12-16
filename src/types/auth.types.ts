@@ -7,7 +7,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   full_name: string;
-  role?: 'client' | 'admin';
+  role?: 'Client' | 'Admin';
 }
 
 export interface AuthResponse {
@@ -17,8 +17,8 @@ export interface AuthResponse {
 
 export interface DecodedToken {
   user_id: string;
-  email: string;
-  role: 'admin' | 'client';
+  user_email: string;
+  user_type: 'admin' | 'client';
   full_name?: string;
   exp: number;
-}
+} 
