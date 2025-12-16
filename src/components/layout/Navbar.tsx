@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
               );
             })}
             <div className="flex items-center gap-3 pl-6 border-l">
-              <span className="text-sm text-gray-600">{user?.email}</span>
+              <span className="text-sm text-gray-600">{user?.user_email}</span>
               <Button variant="danger" size="sm" onClick={handleLogout}>
                 <LogOut size={16} className="mr-1" />
                 Logout
@@ -84,7 +84,7 @@ export const Navbar: React.FC = () => {
               );
             })}
             <div className="pt-3 border-t">
-              <p className="text-sm text-gray-600 mb-2">{user?.email}</p>
+              <p className="text-sm text-gray-600 mb-2">{user?.user_email}</p>
               <Button variant="danger" size="sm" onClick={handleLogout} className="w-full">
                 <LogOut size={16} className="mr-2" />
                 Logout

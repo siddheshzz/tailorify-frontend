@@ -22,13 +22,25 @@ import { ManageServices } from './pages/admin/ManageServices';
 import { ManageOrders } from './pages/admin/ManageOrders';
 import { ManageBookings } from './pages/admin/ManageBookings';
 import { ManageUsers } from './pages/admin/ManageUsers';
+import { LoadingSpinner } from './components/common/LoadingSpinner';
 
 function App() {
-  const { initialize, isAuthenticated } = useAuthStore();
+  const { initialize, isAuthenticated , isInitializing } = useAuthStore();
 
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  // Wait for the initialization to complete before rendering routes
+  if (isInitializing) {
+    // You can show a global loading screen here
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        {/* You need to create this component or just use a message */}
+        <LoadingSpinner size={50} /> 
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -57,12 +69,14 @@ function App() {
         }}
       />
 
+      
+
       <Routes>
         {/* Public Routes */}
-        {/* <Route
+        <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
-        /> */}
+        />
         <Route
           path="/register"
           element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
@@ -72,9 +86,9 @@ function App() {
         <Route
           path="/"
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <Home />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -122,9 +136,9 @@ function App() {
         <Route
           path="/admin"
           element={
-            // <ProtectedRoute requireAdmin>
+            <ProtectedRoute requireAdmin>
               <Dashboard />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -160,11 +174,12 @@ function App() {
           }
         />
 
-        {/* Catch all
-        <Route path="*" element={<Navigate to="/" replace />} /> */}
+        {/* Catch all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
+  
 }
 
 export default App;

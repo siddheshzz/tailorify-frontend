@@ -12,6 +12,7 @@ interface AuthState {
   setToken: (token: string) => void;
   logout: () => void;
   initialize: () => void;
+  isInitializing: boolean;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -19,16 +20,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isAdmin: false,
+  isInitializing:true,
 
   setToken: (token: string) => {
+    console.log("**********");
+    console.log("**********");
+    console.log(token);
+    console.log("**********");
+    console.log("**********");
     const decoded = decodeToken(token);
+    console.log("**********");
+    console.log("**********");
+    console.log(decoded);
+    console.log("**********");
+    console.log("**********");
+    console.log(isTokenExpired(token))
     if (decoded && !isTokenExpired(token)) {
       storage.setToken(token);
       set({
         token,
         user: decoded,
         isAuthenticated: true,
-        isAdmin: decoded.role === 'admin',
+        isAdmin: decoded.user_type === 'admin',
       });
     }
   },
@@ -50,20 +63,34 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   initialize: () => {
+    console.log("AUTH INITIALIZE CALLED");
     const token = storage.getToken();
-    if (token && !isTokenExpired(token)) {
-      const decoded = decodeToken(token);
-      if (decoded) {
+
+    console.log('Initialize - Token from storage:', !!token);
+    if (token) {
+
+      const decoded = decodeToken(token)
+      const expired = isTokenExpired(token)
+
+      console.log('Initialize - Decoded:', !!decoded);
+        console.log('Initialize - Expired:', expired);
+      // const decoded = decodeToken(token);
+      if (decoded && !expired) {
         set({
           token,
           user: decoded,
           isAuthenticated: true,
-          isAdmin: decoded.role === 'admin',
+          isAdmin: decoded.user_type === 'admin',
+          isInitializing:false
         });
+        console.log('Initialize - SUCCESS: State is being set.');
       } else {
+        console.log('Initialize - FAILURE: Token invalid or expired.');
         storage.removeToken();
+
       }
     } else {
+      console.log('Initialize - FAILURE: No token found in storage.');
       storage.removeToken();
     }
   },

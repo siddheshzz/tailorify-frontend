@@ -251,3 +251,30 @@ code {
     box-shadow 0.2s ease,
     transform 0.2s ease;
 }
+
+
+
+From what i see is we need to tweartk frontend a lot to accomodate this backend
+
+so completed with admin route it was like the admin route
+Turns out it was a Race condition and a Router conflict during initial load and sub sequent navigation
+
+What steps i did was check first if token set and get was correct- by checking Inspect- Application-LocalStorage
+
+when we first hit the admin route, the app tries to render --- does route check -- Is it ProtectedRoute requireAdmin
+
+State is initial stage and flags liek isAuthenticated is set to false as it is just a start --- THEY DONT KNOW I AM AUTHENTICATED WHY THOUGH - 
+
+but but - Redirect Fires as isAuthenticated is fakse and navigate to login --
+
+then initialize() runs and successfully sets isAuthenticated: true.
+
+SO IN ALL initialize was not rendering due to which isAuthenticated was not setting up
+
+To fix this we wanted to make sure that the protected content is rendered give it time to render like delay.... initialize is called before redirecting or navigating to login again
+
+we created isInitializing flag which sets as true from begining , once the token is set or deleted it sets to false.
+
+so App.tsx now waits for initialization to complete for every screen. -Done
+
+
