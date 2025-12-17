@@ -15,18 +15,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { isAuthenticated,isAdmin, user } = useAuthStore();
 
 
-  console.log({
-    isAuthenticated,
-    requireAdmin,
-    user,
-  });
+  // console.log({
+  //   isAuthenticated,
+  //   requireAdmin,
+  //   user,
+  // });
 
-  console.log("ProtectedRoute render", {
-  path: window.location.pathname,
-  requireAdmin,
-  isAuthenticated,
-  user,
-});
+//   console.log("ProtectedRoute render", {
+//   path: window.location.pathname,
+//   requireAdmin,
+//   isAuthenticated,
+//   user,
+// });
 
   // Show loading while checking auth state
   if (isAuthenticated && !user) {

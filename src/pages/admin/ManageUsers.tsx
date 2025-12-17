@@ -7,7 +7,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { User, Mail, Calendar, Trash2 } from 'lucide-react';
 import { userService } from '@/services/user.service';
-import { User as UserType } from '@/types/user.types';
+import {  User as UserType, UserUpdate } from '@/types/user.types';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -20,9 +20,51 @@ export const ManageUsers: React.FC = () => {
     // Note: This endpoint doesn't exist in your backend
     // You'll need to add GET /api/v1/user/ endpoint for admin to list all users
     // For now, this is a placeholder
-    setLoading(false);
-    toast.info('User listing endpoint not available in backend');
+    // setLoading(false);
+    // toast.info('User listing endpoint not available in backend');
+    loadUsers()
   }, []);
+
+  const loadUsers = async () => {
+    try {
+      const data = await userService.getAll();
+      setUsers(data);
+    } catch (error) {
+      toast.error('Failed to load services');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  // const handleCreate = async (data: UserType) => {
+  //   try {
+  //     await userService.create(data);
+  //     toast.success('Service created successfully!');
+  //     setShowModal(false);
+  //     loadServices();
+  //   } catch (error) {
+  //     toast.error('Failed to create service');
+  //     throw error;
+  //   }
+  // };
+
+  // const handleUpdate = async (data: UserType) => {
+  //   if (!editingService) return;
+
+  //   try {
+  //     await serviceService.update(editingService.id, data);
+  //     toast.success('Service updated successfully!');
+  //     setShowModal(false);
+  //     setEditingService(undefined);
+  //     loadServices();
+  //   } catch (error) {
+  //     toast.error('Failed to update service');
+  //     throw error;
+  //   }
+  // };
+
+
 
   const handleDelete = async () => {
     if (!deletingUser) return;
@@ -52,12 +94,12 @@ export const ManageUsers: React.FC = () => {
         <p className="text-gray-600">View and manage system users</p>
       </div>
 
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+      {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
         <p className="text-yellow-800 text-sm">
           ⚠️ Note: User listing endpoint needs to be added to the backend API.
           Add GET /api/v1/user/ endpoint that returns all users (admin only).
         </p>
-      </div>
+      </div> */}
 
       {users.length === 0 ? (
         <div className="text-center py-12">
@@ -75,7 +117,7 @@ export const ManageUsers: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900">{user.full_name}</h3>
                     <Badge variant={user.role === 'admin' ? 'danger' : 'default'}>
-                      {user.role.toUpperCase()}
+                      {user.user_type.toUpperCase()}
                     </Badge>
                   </div>
                 </div>

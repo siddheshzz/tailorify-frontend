@@ -23,17 +23,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   isInitializing:true,
 
   setToken: (token: string) => {
-    console.log("**********");
-    console.log("**********");
-    console.log(token);
-    console.log("**********");
-    console.log("**********");
+    // console.log("**********");
+    // console.log("**********");
+    // console.log(token);
+    // console.log("**********");
+    // console.log("**********");
     const decoded = decodeToken(token);
-    console.log("**********");
-    console.log("**********");
-    console.log(decoded);
-    console.log("**********");
-    console.log("**********");
+    // console.log("**********");
+    // console.log("**********");
+    // console.log(decoded);
+    // console.log("**********");
+    // console.log("**********");
     console.log(isTokenExpired(token))
     if (decoded && !isTokenExpired(token)) {
       storage.setToken(token);
@@ -72,8 +72,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       const decoded = decodeToken(token)
       const expired = isTokenExpired(token)
 
-      console.log('Initialize - Decoded:', !!decoded);
-        console.log('Initialize - Expired:', expired);
+      // console.log('Initialize - Decoded:', !!decoded);
+      //   console.log('Initialize - Expired:', expired);
       // const decoded = decodeToken(token);
       if (decoded && !expired) {
         set({
@@ -87,11 +87,17 @@ export const useAuthStore = create<AuthState>((set) => ({
       } else {
         console.log('Initialize - FAILURE: Token invalid or expired.');
         storage.removeToken();
+        set({
+        isInitializing: false, // <-- Set to false if token decode fails
+      });
 
       }
     } else {
       console.log('Initialize - FAILURE: No token found in storage.');
       storage.removeToken();
+      set({
+        isInitializing: false, // <-- Set to false if token decode fails
+      });
     }
   },
 }));
