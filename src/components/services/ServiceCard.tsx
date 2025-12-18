@@ -33,7 +33,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
       <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
         <div className="flex items-center gap-1">
           <IndianRupee size={16} />
-          <span className="font-semibold text-blue-600">₹{service.price}</span>
+          <span className="font-semibold text-blue-600">₹{service.base_price}</span>
         </div>
         <div className="flex items-center gap-1">
           <Clock size={16} />

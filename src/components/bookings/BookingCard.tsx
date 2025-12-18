@@ -24,6 +24,10 @@ export const BookingCard: React.FC<BookingCardProps> = ({ booking, serviceName }
     }
   };
 
+  // Create the date object and check if it's valid
+  const appointmentDate = new Date(booking.appointment_time);
+  const isValidDate = !isNaN(appointmentDate.getTime());
+
   return (
     <Card>
       <div className="flex items-start justify-between mb-3">
@@ -39,7 +43,10 @@ export const BookingCard: React.FC<BookingCardProps> = ({ booking, serviceName }
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Clock size={14} />
-          <span>{format(new Date(booking.booking_date), 'PPP p')}</span>
+          {/* <span>{format(new Date(booking.appointment_time), 'PPP p')}</span> */}
+          <span>{isValidDate 
+              ? format(appointmentDate, 'PPP p') 
+              : 'Date not available'}</span>
         </div>
 
         {booking.notes && (

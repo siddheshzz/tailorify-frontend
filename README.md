@@ -278,3 +278,5 @@ we created isInitializing flag which sets as true from begining , once the token
 so App.tsx now waits for initialization to complete for every screen. -Done
 
 
+
+On delete what happends to fireignkey constrains

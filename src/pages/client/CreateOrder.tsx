@@ -232,7 +232,7 @@ export const CreateOrder: React.FC = () => {
                 <option value="">Choose a service...</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} - ₹{service.price} ({service.estimated_days} days)
+                    {service.name} - ₹{service.base_price} ({service.estimated_days} days)
                   </option>
                 ))}
               </select>

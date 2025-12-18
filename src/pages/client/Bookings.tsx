@@ -23,7 +23,7 @@ export const Bookings: React.FC = () => {
 
   const [formData, setFormData] = useState({
     service_id: '',
-    booking_date: '',
+    appointment_time: '',
     notes: '',
   });
 
@@ -56,7 +56,7 @@ export const Bookings: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.service_id || !formData.booking_date) {
+    if (!formData.service_id || !formData.appointment_time) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -65,13 +65,13 @@ export const Bookings: React.FC = () => {
     try {
       await bookingService.create({
         service_id: formData.service_id,
-        booking_date: formData.booking_date,
+        appointment_time: formData.appointment_time,
         notes: formData.notes || undefined,
       });
 
       toast.success('Booking created successfully!');
       setShowForm(false);
-      setFormData({ service_id: '', booking_date: '', notes: '' });
+      setFormData({ service_id: '', appointment_time: '', notes: '' });
       loadData();
     } catch (error) {
       toast.error('Failed to create booking');
@@ -116,7 +116,7 @@ export const Bookings: React.FC = () => {
                 <option value="">Choose a service...</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} - ₹{service.price}
+                    {service.name} - ₹{service.base_price}
                   </option>
                 ))}
               </select>
@@ -125,8 +125,8 @@ export const Bookings: React.FC = () => {
             <Input
               label="Booking Date & Time *"
               type="datetime-local"
-              value={formData.booking_date}
-              onChange={(e) => setFormData({ ...formData, booking_date: e.target.value })}
+              value={formData.appointment_time}
+              onChange={(e) => setFormData({ ...formData, appointment_time: e.target.value })}
               required
             />
 
