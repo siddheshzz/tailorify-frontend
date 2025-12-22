@@ -15,7 +15,8 @@ export const Register: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    full_name: '',
+    first_name:'',
+    last_name:'',
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,8 +28,8 @@ export const Register: React.FC = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+    if (formData.password.length < 9) {
+      toast.error('Password must be at least 9 characters');
       return;
     }
 
@@ -38,8 +39,9 @@ export const Register: React.FC = () => {
       const response = await authService.register({
         email: formData.email,
         password: formData.password,
-        full_name: formData.full_name,
-        role: 'client',
+        first_name:formData.first_name,
+        last_name:formData.last_name,
+        user_type: 'client',
       });
       
       setToken(response.access_token);
@@ -65,11 +67,19 @@ export const Register: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Full Name"
+            label="First Name"
             type="text"
-            value={formData.full_name}
-            onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-            placeholder="John Doe"
+            value={formData.first_name}
+            onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+            placeholder="John"
+            required
+          />
+          <Input
+            label="Last Name"
+            type="text"
+            value={formData.last_name}
+            onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+            placeholder="Doe"
             required
           />
 

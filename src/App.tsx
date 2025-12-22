@@ -73,13 +73,17 @@ function App() {
 
       <Routes>
         {/* Public Routes */}
-        <Route
+        {/* <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
-        />
+        /> */}
+        <Route
+          path="/login"
+          element={<Login />} // Remove the conditional Navigate here
+/>
         <Route
           path="/register"
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
+          element={<Register />}
         />
 
         {/* Client Routes */}

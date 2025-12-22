@@ -1,13 +1,13 @@
 export interface User {
   password: string;
   address: string;
-  user_type: ReactNode;
+  user_type: 'admin' | 'client';
   first_name: string;
   last_name:string;
   id: string;
   email: string;
   full_name: string;
-  role: 'admin' | 'client';
+  // role: 'admin' | 'client';
   created_at?: string;
   phone:string;
 }

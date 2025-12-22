@@ -28,8 +28,8 @@ export const userService = {
         return response.data;
       },
 
-  updateMe: async (id: string, data: UserUpdate): Promise<User> => {
-    const response = await apiClient.put(`/user/me/${id}`, data);
+  updateMe: async ( data: UserUpdate): Promise<User> => {
+    const response = await apiClient.put(`/user/me`, data);
     return response.data;
   },
 

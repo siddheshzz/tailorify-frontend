@@ -52,7 +52,7 @@ export const Profile: React.FC = () => {
 
     setSubmitting(true);
     try {
-      const updated = await userService.updateMe(user.id, {
+      const updated = await userService.updateMe( {
         first_name: formData.first_name,
         last_name: formData.last_name,
         phone:formData.phone,

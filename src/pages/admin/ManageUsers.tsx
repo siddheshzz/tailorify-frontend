@@ -116,7 +116,7 @@ export const ManageUsers: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">{user.full_name}</h3>
-                    <Badge variant={user.role === 'admin' ? 'danger' : 'default'}>
+                    <Badge variant={user.user_type === 'admin' ? 'danger' : 'default'}>
                       {user.user_type.toUpperCase()}
                     </Badge>
                   </div>

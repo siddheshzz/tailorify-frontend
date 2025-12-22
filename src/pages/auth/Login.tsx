@@ -28,7 +28,7 @@ export const Login: React.FC = () => {
       
       // Redirect based on role
       const decoded = useAuthStore.getState().user;
-      if (decoded?.role === 'admin') {
+      if (decoded?.user_type === "admin") {
         navigate('/admin');
       } else {
         navigate('/');

@@ -6,8 +6,9 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  full_name: string;
-  role?: 'client' | 'admin';
+  first_name: string;
+  last_name:string;
+  user_type?: 'client' | 'admin';
 }
 
 export interface AuthResponse {
@@ -19,6 +20,7 @@ export interface DecodedToken {
   user_id: string;
   user_email: string;
   user_type: 'admin' | 'client';
-  full_name?: string;
+  first_name: string;
+  last_name:string;
   exp: number;
 } 
