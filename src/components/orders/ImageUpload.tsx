@@ -187,40 +187,45 @@
 //   );
 // };
 
-
-import React, { useState, useRef } from 'react';
-import { Upload, Check, X, Loader2, Image as ImageIcon } from 'lucide-react';
-import { Button } from '@/components/common/Button';
-import { Card } from '@/components/common/Card';
-import { orderService } from '@/services/order.service';
-import { useAuthStore } from '@/store/authStore';
-import toast from 'react-hot-toast';
+import React, { useState, useRef } from "react";
+import { Upload, Check, X, Loader2, Image as ImageIcon } from "lucide-react";
+import { Button } from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
+import { orderService } from "@/services/order.service";
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface ImageUploadProps {
   orderId: string;
   onUploadComplete: (imageUrl: string) => void;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ orderId, onUploadComplete }) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  orderId,
+  onUploadComplete,
+}) => {
   const { user } = useAuthStore();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [imageType, setImageType] = useState<'before' | 'after' | 'reference' | 'instruction'>('before');
+  const [imageType, setImageType] = useState<
+    "before" | "after" | "reference" | "instruction"
+  >("before");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB');
+      toast.error("File size must be less than 5MB");
       return;
     }
 
@@ -234,62 +239,146 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ orderId, onUploadCompl
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !user?.user_id) return;
-
+    if (!selectedFile) return;
     setUploading(true);
-    setUploadProgress(0);
 
     try {
-      // Step 1: Get presigned upload URL
-      toast.loading('Preparing upload...', { id: 'upload' });
-      const extension = '.' + selectedFile.name.split('.').pop();
-      const { url, s3_object_path } = await orderService.getUploadUrl(
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("image_type", imageType);
+
+      toast.loading("Uploading...", { id: "upload" });
+
+      // const response = await axios.post(
+      //   `/order/${orderId}/upload-image`,
+      //   formData,
+      //   {
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //   }
+      // );
+
+      const response = await orderService.uploadImageDirect(
         orderId,
-        extension,
-        selectedFile.type
+        selectedFile,
+        "before"
       );
-      
-      setUploadProgress(33);
 
-      // Step 2: Upload file directly to S3
-      toast.loading('Uploading image...', { id: 'upload' });
-      await orderService.uploadImage(url, selectedFile);
-      
-      setUploadProgress(66);
-
-      // Step 3: Confirm upload with backend
-      toast.loading('Confirming upload...', { id: 'upload' });
-      const result = await orderService.confirmUpload(orderId, {
-        s3_object_path,
-        uploaded_by: user.user_id,
-        image_type: imageType,
-      });
-      
-      setUploadProgress(100);
-
-      toast.success('Image uploaded successfully!', { id: 'upload' });
-      onUploadComplete(result.s3_url);
+      toast.success("Upload successful!", { id: "upload" });
+      onUploadComplete(response.s3_url);
 
       // Reset
       setSelectedFile(null);
       setPreview(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error: any) {
-      console.error('Upload error:', error);
-      toast.error(error.response?.data?.detail || 'Failed to upload image', { id: 'upload' });
+      console.error(error);
+      toast.error("Upload failed", { id: "upload" });
     } finally {
       setUploading(false);
-      setUploadProgress(0);
     }
   };
+
+  // const handleUpload = async () => {
+  //   if (!selectedFile || !user?.user_id) return;
+
+  //   setUploading(true);
+  //   setUploadProgress(20); // Initial progress
+
+  //   try {
+  //     toast.loading("Uploading to server...", { id: "upload" });
+
+  //     // Create Multipart Form Data
+  //     const formData = new FormData();
+  //     formData.append("file", selectedFile);
+  //     formData.append("image_type", imageType);
+
+  //     // Single call to your backend (Port 8000)
+  //     // This bypasses the S3 localhost (Port 9000) entirely
+  //     const response = await axios.post(
+  //       `/api/v1/order/${orderId}/upload-direct`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //         onUploadProgress: (progressEvent) => {
+  //           const percentCompleted = Math.round(
+  //             (progressEvent.loaded * 100) / progressEvent.total!
+  //           );
+  //           setUploadProgress(percentCompleted);
+  //         },
+  //       }
+  //     );
+
+  //     toast.success("Image uploaded successfully!", { id: "upload" });
+  //     onUploadComplete(response.data.s3_url);
+
+  //     // Reset
+  //     setSelectedFile(null);
+  //     setPreview(null);
+  //   } catch (error: any) {
+  //     console.error("Upload error:", error);
+  //     toast.error("Failed to upload image", { id: "upload" });
+  //   } finally {
+  //     setUploading(false);
+  //     setUploadProgress(0);
+  //   }
+
+  //   // setUploading(true);
+  //   // setUploadProgress(0);
+
+  //   // try {
+  //   //   // Step 1: Get presigned upload URL
+  //   //   toast.loading('Preparing upload...', { id: 'upload' });
+  //   //   const extension = '.' + selectedFile.name.split('.').pop();
+  //   //   const { url, s3_object_path } = await orderService.getUploadUrl(
+  //   //     orderId,
+  //   //     extension,
+  //   //     selectedFile.type
+  //   //   );
+
+  //   //   setUploadProgress(33);
+
+  //   //   // Step 2: Upload file directly to S3
+  //   //   toast.loading('Uploading image...', { id: 'upload' });
+  //   //   await orderService.uploadImage(url, selectedFile);
+
+  //   //   setUploadProgress(66);
+
+  //   //   // Step 3: Confirm upload with backend
+  //   //   toast.loading('Confirming upload...', { id: 'upload' });
+  //   //   const result = await orderService.confirmUpload(orderId, {
+  //   //     s3_object_path,
+  //   //     uploaded_by: user.user_id,
+  //   //     image_type: imageType,
+  //   //   });
+
+  //   //   setUploadProgress(100);
+
+  //   //   toast.success('Image uploaded successfully!', { id: 'upload' });
+  //   //   onUploadComplete(result.s3_url);
+
+  //   //   // Reset
+  //   //   setSelectedFile(null);
+  //   //   setPreview(null);
+  //   //   if (fileInputRef.current) {
+  //   //     fileInputRef.current.value = '';
+  //   //   }
+  //   // } catch (error: any) {
+  //   //   console.error('Upload error:', error);
+  //   //   toast.error(error.response?.data?.detail || 'Failed to upload image', { id: 'upload' });
+  //   // } finally {
+  //   //   setUploading(false);
+  //   //   setUploadProgress(0);
+  //   // }
+  // };
 
   const handleCancel = () => {
     setSelectedFile(null);
     setPreview(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -329,7 +418,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ orderId, onUploadCompl
             className="hidden"
             disabled={uploading}
           />
-          
+
           {!preview ? (
             <button
               type="button"
@@ -371,14 +460,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ orderId, onUploadCompl
                 style={{ width: `${uploadProgress}%` }}
               />
             </div>
-            <p className="text-sm text-gray-600 text-center">{uploadProgress}% Complete</p>
+            <p className="text-sm text-gray-600 text-center">
+              {uploadProgress}% Complete
+            </p>
           </div>
         )}
 
         {/* Actions */}
         {selectedFile && !uploading && (
           <div className="flex gap-3">
-            <Button variant="secondary" onClick={handleCancel} className="flex-1">
+            <Button
+              variant="secondary"
+              onClick={handleCancel}
+              className="flex-1"
+            >
               Cancel
             </Button>
             <Button onClick={handleUpload} className="flex-1">

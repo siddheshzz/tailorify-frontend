@@ -66,9 +66,9 @@
 //     if (!editingOrder || !newStatus) return;
 
 //     try {
-//       await orderService.update(editingOrder.id, { 
+//       await orderService.update(editingOrder.id, {
 //         service_id: editingOrder.service_id,
-//         notes: editingOrder.notes 
+//         notes: editingOrder.notes
 //       });
 //       toast.success('Order updated successfully!');
 //       setEditingOrder(null);
@@ -225,24 +225,25 @@
 //   );
 // };
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
-import { Button } from '@/components/common/Button';
-import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { Modal } from '@/components/common/Modal';
-import { AdminOrderForm } from '@/components/orders/AdminOrderForm';
-import { ImageGallery } from '@/components/orders/ImageGallery';
-import { Eye, Edit, Trash2, Calendar, Image as ImageIcon } from 'lucide-react';
-import { orderService } from '@/services/order.service';
-import { serviceService } from '@/services/service.service';
-import { Order, OrderCreate } from '@/types/order.types';
-import { Service } from '@/types/service.types';
-import { format } from 'date-fns';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import { Card } from "@/components/common/Card";
+import { Badge } from "@/components/common/Badge";
+import { Button } from "@/components/common/Button";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
+import { Modal } from "@/components/common/Modal";
+import { AdminOrderForm } from "@/components/orders/AdminOrderForm";
+import { ImageGallery } from "@/components/orders/ImageGallery";
+import { Eye, Edit, Trash2, Calendar, Image as ImageIcon } from "lucide-react";
+import { orderService } from "@/services/order.service";
+import { serviceService } from "@/services/service.service";
+import { Order, OrderCreate } from "@/types/order.types";
+import { Service } from "@/types/service.types";
+import { format } from "date-fns";
+import toast from "react-hot-toast";
+import { AdminImageUpload } from "@/components/orders/AdminImageUpload";
 
 export const ManageOrders: React.FC = () => {
   const navigate = useNavigate();
@@ -272,7 +273,7 @@ export const ManageOrders: React.FC = () => {
       });
       setServices(servicesMap);
     } catch (error) {
-      toast.error('Failed to load orders');
+      toast.error("Failed to load orders");
     } finally {
       setLoading(false);
     }
@@ -283,11 +284,11 @@ export const ManageOrders: React.FC = () => {
 
     try {
       await orderService.delete(deletingOrder.id);
-      toast.success('Order deleted successfully!');
+      toast.success("Order deleted successfully!");
       setDeletingOrder(null);
       loadData();
     } catch (error) {
-      toast.error('Failed to delete order');
+      toast.error("Failed to delete order");
     }
   };
 
@@ -296,29 +297,29 @@ export const ManageOrders: React.FC = () => {
 
     try {
       await orderService.update(editingOrder.id, data);
-      toast.success('Order updated successfully!');
+      toast.success("Order updated successfully!");
       setEditingOrder(null);
       loadData();
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Failed to update order');
+      toast.error(error.response?.data?.detail || "Failed to update order");
       throw error;
     }
   };
 
-  const getStatusVariant = (status: Order['status']) => {
+  const getStatusVariant = (status: Order["status"]) => {
     switch (status) {
-      case 'completed':
-        return 'success';
-      case 'in_progress':
-        return 'info';
-      case 'ready':
-        return 'success';
-      case 'pending':
-        return 'warning';
-      case 'cancelled':
-        return 'danger';
+      case "completed":
+        return "success";
+      case "in_progress":
+        return "info";
+      case "ready":
+        return "success";
+      case "pending":
+        return "warning";
+      case "cancelled":
+        return "danger";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -352,10 +353,14 @@ export const ManageOrders: React.FC = () => {
                       Order #{order.id.slice(0, 8)}
                     </h3>
                     <Badge variant={getStatusVariant(order.status)}>
-                      {order.status.replace('_', ' ').toUpperCase()}
+                      {order.status.replace("_", " ").toUpperCase()}
                     </Badge>
-                    {order.priority && order.priority !== 'normal' && (
-                      <Badge variant={order.priority === 'urgent' ? 'danger' : 'warning'}>
+                    {order.priority && order.priority !== "normal" && (
+                      <Badge
+                        variant={
+                          order.priority === "urgent" ? "danger" : "warning"
+                        }
+                      >
                         {order.priority.toUpperCase()}
                       </Badge>
                     )}
@@ -364,23 +369,32 @@ export const ManageOrders: React.FC = () => {
                   <p className="text-gray-700 mb-2">{order.description}</p>
 
                   <p className="text-gray-600 mb-2">
-                    <span className="font-medium">Service:</span> {services[order.service_id]?.name || 'Unknown'}
+                    <span className="font-medium">Service:</span>{" "}
+                    {services[order.service_id]?.name || "Unknown"}
                   </p>
 
                   {order.notes && (
-                    <p className="text-sm text-gray-500 mb-2 italic">Notes: {order.notes}</p>
+                    <p className="text-sm text-gray-500 mb-2 italic">
+                      Notes: {order.notes}
+                    </p>
                   )}
 
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} />
-                      <span>Created: {format(new Date(order.created_at), 'PP')}</span>
+                      <span>
+                        Created: {format(new Date(order.created_at), "PP")}
+                      </span>
                     </div>
                     {order.quoted_price && (
-                      <span className="font-semibold text-blue-600">₹{order.quoted_price}</span>
+                      <span className="font-semibold text-blue-600">
+                        ₹{order.quoted_price}
+                      </span>
                     )}
                     {order.actual_price && (
-                      <span className="font-semibold text-green-600">Actual: ₹{order.actual_price}</span>
+                      <span className="font-semibold text-green-600">
+                        Actual: ₹{order.actual_price}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -433,7 +447,7 @@ export const ManageOrders: React.FC = () => {
         )}
       </Modal>
 
-      {/* View Images Modal */}
+      {/* View Images Modal
       <Modal
         isOpen={!!viewingImages}
         onClose={() => setViewingImages(null)}
@@ -441,6 +455,25 @@ export const ManageOrders: React.FC = () => {
         size="xl"
       >
         {viewingImages && <ImageGallery orderId={viewingImages.id} />}
+      </Modal> */}
+
+      <Modal
+        isOpen={!!viewingImages}
+        onClose={() => setViewingImages(null)}
+        title={`Images - Order #${viewingImages?.id.slice(0, 8)}`}
+        size="xl"
+      >
+        {viewingImages && (
+          <div className="space-y-6">
+            <ImageGallery orderId={viewingImages.id} canDelete={true} />
+            <AdminImageUpload
+              orderId={viewingImages.id}
+              onUploadComplete={() => {
+                // Refresh will happen automatically in ImageGallery
+              }}
+            />
+          </div>
+        )}
       </Modal>
 
       {/* Delete Confirmation */}
@@ -449,7 +482,10 @@ export const ManageOrders: React.FC = () => {
         onClose={() => setDeletingOrder(null)}
         onConfirm={handleDelete}
         title="Delete Order"
-        message={`Are you sure you want to delete order #${deletingOrder?.id.slice(0, 8)}? This action cannot be undone.`}
+        message={`Are you sure you want to delete order #${deletingOrder?.id.slice(
+          0,
+          8
+        )}? This action cannot be undone.`}
         confirmText="Delete"
         variant="danger"
       />
