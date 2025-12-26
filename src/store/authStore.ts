@@ -23,17 +23,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   isInitializing:true,
 
   setToken: (token: string) => {
-    // console.log("**********");
-    // console.log("**********");
-    // console.log(token);
-    // console.log("**********");
-    // console.log("**********");
+    console.log("**********");
+    console.log("**********");
+    console.log(token);
+    console.log("**********");
+    console.log("**********");
     const decoded = decodeToken(token);
-    // console.log("**********");
-    // console.log("**********");
-    // console.log(decoded);
-    // console.log("**********");
-    // console.log("**********");
+    console.log("**********");
+    console.log("**********");
+    console.log(decoded);
+    console.log("**********");
+    console.log("**********");
     console.log(isTokenExpired(token))
     if (decoded && !isTokenExpired(token)) {
       storage.setToken(token);

@@ -1,31 +1,32 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { useAuthStore } from './store/authStore';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/authStore";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 // Auth Pages
-import { Login } from './pages/auth/Login';
-import { Register } from './pages/auth/Register';
+import { Login } from "./pages/auth/Login";
+import { Register } from "./pages/auth/Register";
 
 // Client Pages
-import { Home } from './pages/client/Home';
-import { CreateOrder } from './pages/client/CreateOrder';
-import { MyOrders } from './pages/client/MyOrders';
-import { OrderDetail } from './pages/client/OrderDetail';
-import { Bookings } from './pages/client/Bookings';
-import { Profile } from './pages/client/Profile';
+import { Home } from "./pages/client/Home";
+import { CreateOrder } from "./pages/client/CreateOrder";
+import { MyOrders } from "./pages/client/MyOrders";
+import { OrderDetail } from "./pages/client/OrderDetail";
+import { Bookings } from "./pages/client/Bookings";
+import { Profile } from "./pages/client/Profile";
 
 // Admin Pages
-import { Dashboard } from './pages/admin/Dashboard';
-import { ManageServices } from './pages/admin/ManageServices';
-import { ManageOrders } from './pages/admin/ManageOrders';
-import { ManageBookings } from './pages/admin/ManageBookings';
-import { ManageUsers } from './pages/admin/ManageUsers';
-import { LoadingSpinner } from './components/common/LoadingSpinner';
+import { Dashboard } from "./pages/admin/Dashboard";
+import { ManageServices } from "./pages/admin/ManageServices";
+import { ManageOrders } from "./pages/admin/ManageOrders";
+import { ManageBookings } from "./pages/admin/ManageBookings";
+import { ManageUsers } from "./pages/admin/ManageUsers";
+import { LoadingSpinner } from "./components/common/LoadingSpinner";
+import { Landing } from "./pages/client/Landing";
 
 function App() {
-  const { initialize, isAuthenticated , isInitializing } = useAuthStore();
+  const { initialize, isAuthenticated, isInitializing } = useAuthStore();
 
   useEffect(() => {
     initialize();
@@ -37,7 +38,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         {/* You need to create this component or just use a message */}
-        <LoadingSpinner size={50} /> 
+        <LoadingSpinner size={50} />
       </div>
     );
   }
@@ -49,42 +50,32 @@ function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#363636',
-            color: '#fff',
+            background: "#363636",
+            color: "#fff",
           },
           success: {
             duration: 3000,
             iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
+              primary: "#10b981",
+              secondary: "#fff",
             },
           },
           error: {
             duration: 4000,
             iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+              primary: "#ef4444",
+              secondary: "#fff",
             },
           },
         }}
       />
 
-      
-
       <Routes>
         {/* Public Routes */}
-        {/* <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
-        /> */}
-        <Route
-          path="/login"
-          element={<Login />} // Remove the conditional Navigate here
-/>
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Client Routes */}
         <Route
@@ -183,7 +174,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-  
 }
 
 export default App;

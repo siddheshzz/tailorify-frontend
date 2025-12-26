@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Package } from 'lucide-react';
-import { Card } from '@/components/common/Card';
-import { Input } from '@/components/common/Input';
-import { Button } from '@/components/common/Button';
-import { useAuthStore } from '@/store/authStore';
-import { authService } from '@/services/auth.service';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Package } from "lucide-react";
+import { Card } from "@/components/common/Card";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
+import { useAuthStore } from "@/store/authStore";
+import { authService } from "@/services/auth.service";
+import toast from "react-hot-toast";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const { setToken } = useAuthStore();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,17 +24,20 @@ export const Login: React.FC = () => {
     try {
       const response = await authService.login(formData);
       setToken(response.access_token);
-      toast.success('Login successful!');
-      
+      toast.success("Login successful!");
+
       // Redirect based on role
       const decoded = useAuthStore.getState().user;
       if (decoded?.user_type === "admin") {
-        navigate('/admin');
+        navigate("/admin");
       } else {
-        navigate('/');
+        navigate("/");
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Login failed. Please check your credentials.');
+      toast.error(
+        error.response?.data?.detail ||
+          "Login failed. Please check your credentials."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +50,9 @@ export const Login: React.FC = () => {
           <div className="flex justify-center mb-3">
             <Package className="text-blue-600" size={48} />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h1>
           <p className="text-gray-600">Sign in to your Tailorify account</p>
         </div>
 
@@ -56,7 +61,9 @@ export const Login: React.FC = () => {
             label="Email"
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             placeholder="your@email.com"
             required
           />
@@ -65,7 +72,9 @@ export const Login: React.FC = () => {
             label="Password"
             type="password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             placeholder="••••••••"
             required
           />
@@ -76,8 +85,11 @@ export const Login: React.FC = () => {
         </form>
 
         <p className="text-center mt-6 text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Create one
           </Link>
         </p>
