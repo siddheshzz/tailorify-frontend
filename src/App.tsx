@@ -73,19 +73,32 @@ function App() {
       <Routes>
         {/* Public Routes */}
         {/* Public Routes */}
-        <Route path="/" element={<Landing />} />
+        {/* <Route path="/" element={<Landing />} /> */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            ) : (
+              <Landing />
+            )
+          }
+        />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Client Routes */}
-        <Route
+        {/* <Route
           path="/"
           element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/orders/create"
           element={
